@@ -19,6 +19,7 @@ public class Task1 implements Task {
   // !!! Редактируйте этот метод !!!
   private List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = PersonService.findPersons(personIds);
+    // копирование элементов в stream - O(n), сортировка в худшем случае - O(n*log(n))
     return persons.stream().sorted(Comparator.comparingInt(Person::getId)).collect(Collectors.toList());
   }
 
