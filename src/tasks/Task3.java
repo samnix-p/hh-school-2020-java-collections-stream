@@ -15,11 +15,11 @@ public class Task3 implements Task {
 
   // !!! Редактируйте этот метод !!!
   private List<Person> sort(Collection<Person> persons) {
-    return persons.stream().
-            sorted(Comparator.comparing(Person::getSecondName).
-                    thenComparing(Person::getFirstName).
-                    thenComparing(Person::getCreatedAt)).
-            collect(Collectors.toList());
+    return persons.stream()
+            .sorted(Comparator.comparing(Person::getSecondName)
+                    .thenComparing(Person::getFirstName)
+                    .thenComparing(Person::getCreatedAt))
+            .collect(Collectors.toList());
   }
 
   @Override

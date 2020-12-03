@@ -19,8 +19,6 @@ P.P.S Здесь ваши правки желательно прокоммент
  */
 public class Task8 implements Task {
 
-  private long count;
-
   //Не хотим выдывать апи нашу фальшивую персону, поэтому конвертим начиная со второй
   public List<String> getNames(List<Person> persons) {
     /*
@@ -48,24 +46,23 @@ public class Task8 implements Task {
      * Полное имя можно собрать с помощью stream, убрав из потока элементы, если они null.
      * (Необходимый формат полного имени нужно уточнить)
      */
-    return Stream.of(person.getSecondName(), person.getFirstName(), person.getMiddleName()).
-            filter(Objects::nonNull).
-            collect(Collectors.joining(" "));
+    return Stream.of(person.getSecondName(), person.getFirstName(), person.getMiddleName())
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(" "));
   }
 
   // словарь id персоны -> ее имя
   public Map<Integer, String> getPersonNames(Collection<Person> persons) {
     /*
      * Можно сделать с помощью stream и Collectors.toMap
-     * Если не нужно убирать фейковую персону, то убрать skip(1)
      */
-    return persons.stream().skip(1).collect(Collectors.toMap(Person::getId, this::convertPersonToString, (a, b) -> a));
+    return persons.stream().collect(Collectors.toMap(Person::getId, this::convertPersonToString, (a, b) -> a));
   }
 
   // есть ли совпадающие в двух коллекциях персоны?
   public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
-    // Можно сделать с помощью stream
-    return persons1.stream().anyMatch(persons2::contains);
+    Set<Person> personSet1 = new HashSet<>(persons1);
+    return persons2.stream().anyMatch(personSet1::contains);
   }
 
   //...
@@ -96,7 +93,8 @@ public class Task8 implements Task {
     everythingIsOk &= getDifferentNames(persons).equals(Set.of("Vasya", "Ivan", "Denis", "Boris"));
     everythingIsOk &= convertPersonToString(persons.get(2)).equals("Ivanov Ivan Ivanovich");
     everythingIsOk &= getPersonNames(persons).
-            equals(Map.of(2, "Vasya",
+            equals(Map.of(1, "Fake",
+                          2, "Vasya",
                           3, "Ivanov Ivan Ivanovich",
                           4, "Ivan",
                           5, "Denis",
