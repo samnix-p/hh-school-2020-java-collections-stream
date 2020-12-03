@@ -5,11 +5,10 @@ import common.Person;
 import common.Task;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 Имеются
@@ -23,8 +22,23 @@ public class Task6 implements Task {
   private Set<String> getPersonDescriptions(Collection<Person> persons,
                                             Map<Integer, Set<Integer>> personAreaIds,
                                             Collection<Area> areas) {
-    return new HashSet<>();
+    Map<Integer, String> areaIdNames = areas.stream().collect(Collectors.toMap(Area::getId, Area::getName, (a ,b) -> a));
+    return persons.stream()
+            .flatMap(p -> personAreaIds.get(p.getId()).stream()
+                    .map(i -> String.join(" - ", p.getFirstName(), areaIdNames.get(i))))
+            .collect(Collectors.toSet());
   }
+
+  /*
+  Вариант в одно выражение:
+
+  return persons.stream()
+        .flatMap(p -> personAreaIds.get(p.getId()).stream()
+                .map(i -> String.join(" - ", p.getFirstName(), areas.stream()
+                        .filter(a -> a.getId().equals(i)).collect(Collectors.toSet()).iterator().next().getName())))
+        .collect(Collectors.toSet());
+   */
+
 
   @Override
   public boolean check() {
